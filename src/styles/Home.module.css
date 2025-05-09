@@ -1,0 +1,186 @@
+.container {
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.controls {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.scaleControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #2a2a2a;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.scaleControl span {
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #333;
+  background-color: #2a2a2a;
+  color: white;
+  width: 60px;
+  text-align: center;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+}
+
+.playButton {
+  padding: 0.5rem 2rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: none;
+  background-color: #4a90e2;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.playButton:hover {
+  background-color: #357abd;
+}
+
+.resetButton {
+  background-color: #e24a4a;
+}
+
+.resetButton:hover {
+  background-color: #bd3535;
+}
+
+.boardContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+}
+
+.boardWithRows {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #333;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+}
+
+.tile {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.light {
+  background-color: #2a2a2a;
+}
+
+.dark {
+  background-color: #1a1a1a;
+}
+
+.coordinate {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.columnCoordinates {
+  display: flex;
+  justify-content: space-around;
+  padding-left: 30px;
+  margin-bottom: 0.5rem;
+}
+
+.rowCoordinates {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.columnCoord {
+  color: #666;
+}
+
+.rowCoord {
+  color: #666;
+}
+
+.piece {
+  width: 60px !important;
+  height: 60px !important;
+  object-fit: contain;
+  transition: transform 0.2s;
+}
+
+.piece:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.turnIndicator {
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  color: white;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.selected {
+  background-color: rgba(76, 175, 80, 0.3) !important;
+  position: relative;
+}
+
+.selected::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid #4CAF50;
+  pointer-events: none;
+} 
