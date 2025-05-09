@@ -54,4 +54,10 @@ export class PieceManager {
     piece.position = { x: toX, y: toY };
     return true;
   }
+
+  public removePiece(x: number, y: number): void {
+    this.pieces = this.pieces.filter(piece => 
+      piece.position.x !== x || piece.position.y !== y
+    );
+  }
 } 

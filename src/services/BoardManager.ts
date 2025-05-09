@@ -1,8 +1,13 @@
-import { PieceManager, Piece } from './PieceManager';
+import { PieceManager, Piece, PieceColor } from './PieceManager';
 
 export interface Tile {
   type: 'light' | 'dark';
   piece?: Piece;
+}
+
+export interface GameResult {
+  isGameOver: boolean;
+  winner?: PieceColor;
 }
 
 export class BoardManager {
@@ -53,7 +58,7 @@ export class BoardManager {
     return this.pieceManager;
   }
 
-  public movePiece(fromX: number, fromY: number, toX: number, toY: number): boolean {
+  public movePiece(fromX: number, fromY: number, toX: number, toY: number): GameResult {
     // Verifica se as coordenadas são válidas
     if (
       fromX < 0 || fromX >= this.size ||
@@ -61,7 +66,7 @@ export class BoardManager {
       toX < 0 || toX >= this.size ||
       toY < 0 || toY >= this.size
     ) {
-      return false;
+      return { isGameOver: false };
     }
 
     const sourceTile = this.board[fromY][fromX];
@@ -69,21 +74,45 @@ export class BoardManager {
 
     // Verifica se há uma peça na posição de origem
     if (!sourceTile.piece) {
-      return false;
+      return { isGameOver: false };
     }
 
-    // Verifica se a posição de destino está vazia
+    // Verifica se há uma peça na posição de destino
     if (targetTile.piece) {
-      return false;
+      // Se for uma peça da mesma cor, movimento inválido
+      if (targetTile.piece.color === sourceTile.piece.color) {
+        return { isGameOver: false };
+      }
+
+      // Captura a peça
+      const capturedPiece = targetTile.piece;
+      
+      // Move a peça que está capturando
+      targetTile.piece = sourceTile.piece;
+      sourceTile.piece = undefined;
+
+      // Atualiza a posição no PieceManager
+      this.pieceManager.movePiece(fromX, fromY, toX, toY);
+      
+      // Remove a peça capturada do PieceManager
+      this.pieceManager.removePiece(toX, toY);
+
+      // Verifica se o jogo acabou (se capturou um padre)
+      if (capturedPiece.type === 'priest') {
+        return {
+          isGameOver: true,
+          winner: targetTile.piece.color
+        };
+      }
+
+      return { isGameOver: false };
     }
 
-    // Move a peça
+    // Move a peça normalmente
     targetTile.piece = sourceTile.piece;
     sourceTile.piece = undefined;
-
-    // Atualiza a posição da peça no PieceManager
     this.pieceManager.movePiece(fromX, fromY, toX, toY);
 
-    return true;
+    return { isGameOver: false };
   }
 } 

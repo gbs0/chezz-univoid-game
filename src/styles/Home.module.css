@@ -203,6 +203,20 @@
   animation: pulse 1.5s infinite;
 }
 
+.captureIndicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(255, 0, 0, 0.7);
+  pointer-events: none;
+  animation: pulse 1.5s infinite;
+  border: 2px solid rgba(255, 0, 0, 0.9);
+}
+
 @keyframes pulse {
   0% {
     transform: translate(-50%, -50%) scale(0.8);
@@ -215,5 +229,43 @@
   100% {
     transform: translate(-50%, -50%) scale(0.8);
     opacity: 0.8;
+  }
+}
+
+.victoryScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.victoryScreen h1 {
+  font-size: 3rem;
+  color: #4CAF50;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.victoryScreen p {
+  font-size: 1.5rem;
+  color: #ffffff;
+  opacity: 0.8;
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 } 
