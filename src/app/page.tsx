@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { BoardManager } from '../services/BoardManager';
 import type { Tile } from '../services/BoardManager';
 import { PieceManager } from '../services/PieceManager';
 import { RoundManager } from '../services/RoundManager';
+import { PlayerMovementManager, ValidMove } from '../services/PlayerMovementManager';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
@@ -14,25 +15,49 @@ export default function Home() {
   const [showBoard, setShowBoard] = useState<boolean>(false);
   const [pieceManager] = useState(() => new PieceManager());
   const [roundManager] = useState(() => new RoundManager());
+  const [movementManager] = useState(() => new PlayerMovementManager());
+  const [validMoves, setValidMoves] = useState<ValidMove[]>([]);
+  const [boardManager, setBoardManager] = useState<BoardManager | null>(null);
 
   const handlePlay = () => {
-    const boardManager = new BoardManager(boardSize);
-    setBoard(boardManager.generateBoard());
+    const newBoardManager = new BoardManager(boardSize);
+    setBoardManager(newBoardManager);
+    setBoard(newBoardManager.generateBoard());
     setShowBoard(true);
+    setValidMoves([]);
   };
 
   const handleReset = () => {
     setBoardSize(6);
     setBoard([]);
     setShowBoard(false);
+    setValidMoves([]);
+    setBoardManager(null);
   };
+
+  const movePiece = useCallback((fromX: number, fromY: number, toX: number, toY: number) => {
+    if (!boardManager) return false;
+
+    const success = boardManager.movePiece(fromX, fromY, toX, toY);
+    if (success) {
+      setBoard(boardManager.generateBoard());
+      roundManager.endTurn();
+      setValidMoves([]);
+    }
+    return success;
+  }, [boardManager, roundManager]);
 
   const handleTileClick = (tile: Tile, x: number, y: number) => {
     if (!tile.piece) {
       // Se não tem peça e tem uma peça selecionada, tenta mover
       const selectedPiece = roundManager.getSelectedPiece();
-      if (selectedPiece) {
-        // Aqui você implementará a lógica de movimento posteriormente
+      if (selectedPiece && movementManager.isValidMove(validMoves, { x, y })) {
+        movePiece(
+          selectedPiece.position.x,
+          selectedPiece.position.y,
+          x,
+          y
+        );
         roundManager.deselectPiece();
       }
       return;
@@ -40,9 +65,20 @@ export default function Home() {
 
     // Se clicou em uma peça
     if (roundManager.selectPiece(tile.piece, x, y)) {
+      // Calcula os movimentos válidos
+      const moves = movementManager.getValidMoves(board, { x, y }, boardSize);
+      setValidMoves(moves);
       // Força atualização do tabuleiro para mostrar a seleção
       setBoard([...board]);
+    } else {
+      setValidMoves([]);
     }
+  };
+
+  const isValidMovePosition = (x: number, y: number): boolean => {
+    return validMoves.some(move => 
+      move.position.x === x && move.position.y === y
+    );
   };
 
   const renderCoordinate = (coord: string, isColumn: boolean) => (
@@ -126,10 +162,11 @@ export default function Home() {
                           key={`${i}-${j}`}
                           className={`${styles.tile} ${styles[tile.type]} ${
                             roundManager.isSelectedPosition(j, i) ? styles.selected : ''
-                          }`}
+                          } ${isValidMovePosition(j, i) ? styles.validMove : ''}`}
                           onClick={() => handleTileClick(tile, j, i)}
                         >
                           {renderPiece(tile)}
+                          {isValidMovePosition(j, i) && <div className={styles.moveIndicator} />}
                         </div>
                       ))}
                     </div>
