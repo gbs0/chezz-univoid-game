@@ -8,6 +8,7 @@ import { PieceManager } from '../services/PieceManager';
 import { RoundManager } from '../services/RoundManager';
 import { PlayerMovementManager, ValidMove } from '../services/PlayerMovementManager';
 import styles from '../styles/Home.module.css';
+import { Typography } from '@mui/material';
 
 export default function Home() {
   const [boardSize, setBoardSize] = useState<number>(6);
@@ -150,8 +151,11 @@ export default function Home() {
           </div>
         ) : (
           <>
+            <div>
+              <Typography variant="h2">Welcome to Chezz Game</Typography>
+            </div>
             <div className={styles.controls}>
-              <div className={styles.scaleControl}>
+              <div className={styles.scaleControl} style={{display: 'flex'}}>
                 <span>Scale</span>
                 <span>X</span>
                 <input
@@ -182,9 +186,20 @@ export default function Home() {
                 </button>
               </div>
             </div>
+            {!showBoard && (
+              <div className={styles.controls}>
+                <img src="/white-horse.png" alt="white-horse" width={100}/>
+                <img src="/black-horse.png" alt="black-horse" width={100}/>
+                <img src="/white-priest.png" alt="white-priest" width={100}/>
+                <img src="/black-priest.png" alt="black-priest" width={100}/>
+                <img src="/white-tower.png" alt="white-tower" width={100}/>
+                <img src="/black-tower.png" alt="black-tower" width={100}/>
+              </div>
+            )}
 
-            {showBoard && (
-              <>
+            
+              {showBoard && (
+                <>
                 <div className={styles.turnIndicator}>
                   Current Turn: {roundManager.getCurrentTurn()} Player
                   <br/>
